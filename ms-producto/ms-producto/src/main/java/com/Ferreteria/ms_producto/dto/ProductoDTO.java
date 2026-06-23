@@ -18,6 +18,7 @@ public class ProductoDTO {
     private Long id;
 
     @NotBlank(message = "El nombre no puede estar vacío")
+    
     @Size(max = 100, message = "Máximo 100 caracteres")
     private String nombre;
 
