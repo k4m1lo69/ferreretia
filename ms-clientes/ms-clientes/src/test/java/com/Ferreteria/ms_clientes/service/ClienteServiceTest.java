@@ -40,14 +40,32 @@ class ClienteServiceTest {
                 .direccion("Calle 123")
                 .build();
 
-        when(clienteRepository.save(any(Cliente.class)))
-                .thenReturn(clienteGuardado);
+        when(clienteRepository.existsByEmail("juan@email.com")).thenReturn(false);
+        when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteGuardado);
 
         ClienteDTO resultado = clienteService.save(dtoEntrada);
 
         assertEquals(1L, resultado.getId());
         assertEquals("Juan Perez", resultado.getNombre());
         assertEquals("juan@email.com", resultado.getEmail());
+    }
+
+    @Test
+    void save_cuandoEmailDuplicado_debeLanzarExcepcion() {
+        ClienteDTO dtoEntrada = ClienteDTO.builder()
+                .nombre("Juan Perez")
+                .email("juan@email.com")
+                .telefono("912345678")
+                .direccion("Calle 123")
+                .build();
+
+        when(clienteRepository.existsByEmail("juan@email.com")).thenReturn(true);
+
+        assertThrows(RuntimeException.class, () -> {
+            clienteService.save(dtoEntrada);
+        });
+
+        verify(clienteRepository, never()).save(any());
     }
 
     @Test
@@ -61,8 +79,7 @@ class ClienteServiceTest {
                 .direccion("Av. Principal 456")
                 .build();
 
-        when(clienteRepository.findById(id))
-                .thenReturn(Optional.of(cliente));
+        when(clienteRepository.findById(id)).thenReturn(Optional.of(cliente));
 
         ClienteDTO resultado = clienteService.getById(id);
 
@@ -73,8 +90,7 @@ class ClienteServiceTest {
     @Test
     void getById_cuandoNoExiste_debeLanzarExcepcion() {
         Long id = 99L;
-        when(clienteRepository.findById(id))
-                .thenReturn(Optional.empty());
+        when(clienteRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> {
             clienteService.getById(id);

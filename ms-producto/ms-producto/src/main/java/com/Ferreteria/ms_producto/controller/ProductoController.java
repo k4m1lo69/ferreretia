@@ -53,7 +53,7 @@ public class ProductoController {
     }
 
     @GetMapping("/categoria/{categoria}")
-    public ResponseEntity<List<ProductoDTO>> getByCatecoria(
+    public ResponseEntity<List<ProductoDTO>> getByCategoria(
             @PathVariable String categoria) {
         return ResponseEntity.ok(
                         productoService.getByCategoria(categoria));
