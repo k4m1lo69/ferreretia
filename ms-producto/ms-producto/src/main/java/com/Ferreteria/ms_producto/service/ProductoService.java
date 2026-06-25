@@ -46,7 +46,7 @@ public class ProductoService {
                 .orElseThrow(() ->{
                     log.error("Producto no encontrado: {}", id);
                     return new RuntimeException(
-                            "Producto con ID " + id + "no encontradp");
+                            "Producto con ID " + id + "no encontrado");
                 });
         return convertirADTO(producto);
     }
@@ -59,7 +59,7 @@ public class ProductoService {
         producto.setDescripcion(dto.getDescripcion());
         producto.setPrecio(dto.getPrecio());
         producto.setMarca(dto.getMarca());
-        log.info("Producto eliminado: {}", id);
+        log.info("Producto actualizado: {}", id);
         return convertirADTO(productoRepository.save(producto));
     }
 
