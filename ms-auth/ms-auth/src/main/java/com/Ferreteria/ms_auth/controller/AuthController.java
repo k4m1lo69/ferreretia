@@ -1,5 +1,6 @@
 package com.Ferreteria.ms_auth.controller;
 
+import com.Ferreteria.ms_auth.dto.ApiResponse;
 import com.Ferreteria.ms_auth.dto.AuthResponse;
 import com.Ferreteria.ms_auth.dto.LoginRequest;
 import com.Ferreteria.ms_auth.dto.RegisterRequest;
@@ -22,16 +23,20 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(
+    public ResponseEntity<?> login(
             @Valid @RequestBody LoginRequest request) {
+
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(
+    public ResponseEntity<ApiResponse> register(
             @Valid @RequestBody RegisterRequest request) {
+
+        authService.register(request);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(authService.register(request));
+                .body(new ApiResponse("Usuario registrado exitosamente"));
     }
 
     @GetMapping("/usuarios")

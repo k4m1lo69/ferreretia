@@ -28,18 +28,21 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
+
         Usuario usuario = usuarioRepository
                 .findByUsername(request.getUsername())
                 .orElseThrow(() ->
-                        new RuntimeException("Credenciales inválidas"));
+                        new RuntimeException("Usuario no encontrado"));
 
         if (!passwordEncoder.matches(
                 request.getPassword(), usuario.getPassword())) {
-            throw new RuntimeException("Credenciales inválidas");
+
+            throw new RuntimeException("Contraseña incorrecta");
         }
 
         String token = jwtUtil.generateToken(
-                usuario.getUsername(), usuario.getRol());
+                usuario.getUsername(),
+                usuario.getRol());
 
         return AuthResponse.builder()
                 .token(token)
@@ -49,6 +52,7 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
+
         if (usuarioRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("El usuario ya existe");
         }
@@ -62,7 +66,8 @@ public class AuthService {
         usuarioRepository.save(usuario);
 
         String token = jwtUtil.generateToken(
-                usuario.getUsername(), usuario.getRol());
+                usuario.getUsername(),
+                usuario.getRol());
 
         return AuthResponse.builder()
                 .token(token)
@@ -72,12 +77,13 @@ public class AuthService {
     }
 
     public List<AuthResponse> getAll() {
-        return usuarioRepository.findAll().stream()
-                .map(u -> AuthResponse.builder()
-                        .username(u.getUsername())
-                        .rol(u.getRol())
+
+        return usuarioRepository.findAll()
+                .stream()
+                .map(usuario -> AuthResponse.builder()
+                        .username(usuario.getUsername())
+                        .rol(usuario.getRol())
                         .build())
                 .collect(Collectors.toList());
     }
 }
-
