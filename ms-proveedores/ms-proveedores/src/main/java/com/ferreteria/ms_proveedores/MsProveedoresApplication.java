@@ -1,17 +1,13 @@
-package com.ferreteria.api_geteway;
+package com.ferreteria.ms_proveedores;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
-
-
-
 @SpringBootApplication
-public class ApiGetewayApplication {
+public class MsProveedoresApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ApiGetewayApplication.class, args);
+		SpringApplication.run(MsProveedoresApplication.class, args);
 	}
 
 }

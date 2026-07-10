@@ -1,17 +1,13 @@
-package com.ferreteria.api_geteway;
+package com.ferreteria.ms_categorias;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
-
-
-
 @SpringBootApplication
-public class ApiGetewayApplication {
+public class MsCategoriasApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ApiGetewayApplication.class, args);
+		SpringApplication.run(MsCategoriasApplication.class, args);
 	}
 
 }
