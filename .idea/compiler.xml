@@ -8,13 +8,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
+        <module name="ms-eureka" />
       </profile>
       <profile name="Annotation profile for ms-reportes" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
         <module name="ms-auth" />
@@ -32,6 +32,7 @@
       <module name="api-gateway" options="-parameters" />
       <module name="ms-auth" options="-parameters" />
       <module name="ms-clientes" options="-parameters" />
+      <module name="ms-eureka" options="-parameters" />
       <module name="ms-inventario" options="-parameters" />
       <module name="ms-pagos" options="-parameters" />
       <module name="ms-pedidos" options="-parameters" />
