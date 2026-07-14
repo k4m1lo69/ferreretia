@@ -1,5 +1,6 @@
 package com.Ferreteria.ms_inventarios.model;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,27 +8,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "inventario")
+@Table(name = "inventarios")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Inventario {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ID del producto del ms-productos
     @Column(nullable = false)
     private Long productoId;
 
     @Column(nullable = false)
-    private Integer stock;
+    private Integer cantidad;
 
     @Column(nullable = false)
-    private Integer stockMinimo;
+    private Integer cantidadMinima;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String ubicacion;
+
+
 }

@@ -28,8 +28,8 @@ public class InventarioService {
 
         Inventario inventario = Inventario.builder()
                 .productoId(dto.getProductoId())
-                .stock(dto.getStock())
-                .stockMinimo(dto.getStockMinimo())
+                .cantidad(dto.getCantidad())
+                .cantidadMinima(dto.getCantidadMinima())
                 .ubicacion(dto.getUbicacion())
                 .build();
 
@@ -72,8 +72,8 @@ public class InventarioService {
                                         "Inventario no encontrado"));
 
         inventario.setProductoId(dto.getProductoId());
-        inventario.setStock(dto.getStock());
-        inventario.setStockMinimo(dto.getStockMinimo());
+        inventario.setCantidad(dto.getCantidad());
+        inventario.setCantidadMinima(dto.getCantidadMinima());
         inventario.setUbicacion(dto.getUbicacion());
 
         log.info("Inventario actualizado {}", id);
@@ -97,25 +97,21 @@ public class InventarioService {
     }
 
     public InventarioDTO getByProductoId(Long productoId) {
-
-        Inventario inventario =
-                inventarioRepository.findByProductoId(productoId)
-                        .orElseThrow(() ->
-                                new RuntimeException(
-                                        "Inventario no encontrado"));
-
-        return convertirADTO(inventario);
+        return inventarioRepository.findByProductoId(productoId)
+                .map(this::convertirADTO)
+                .orElseThrow(() -> new RuntimeException("Inventario no encontrado"));
     }
 
-    private InventarioDTO convertirADTO(
-            Inventario inventario) {
 
+
+    private InventarioDTO convertirADTO(Inventario inventario) {
         return InventarioDTO.builder()
                 .id(inventario.getId())
                 .productoId(inventario.getProductoId())
-                .stock(inventario.getStock())
-                .stockMinimo(inventario.getStockMinimo())
+                .cantidad(inventario.getCantidad())
+                .cantidadMinima(inventario.getCantidadMinima())
                 .ubicacion(inventario.getUbicacion())
                 .build();
     }
+
 }

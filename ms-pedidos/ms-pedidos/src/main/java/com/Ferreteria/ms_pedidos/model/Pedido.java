@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,17 +14,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Pedido {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Cliente del ms-clientes
-    @Column(nullable = false)
+    @Column(name = "cliente_id", nullable = false)
     private Long clienteId;
 
-    // Producto del ms-productos
-    @Column(nullable = false)
+    @Column(name = "producto_id", nullable = false)
     private Long productoId;
 
     @Column(nullable = false)

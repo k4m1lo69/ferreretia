@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import jakarta.persistence.Id;
 
 @Entity
 @Table(name = "productos")
@@ -14,23 +13,26 @@ import jakarta.persistence.Id;
 @AllArgsConstructor
 @Builder
 public class Producto {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 200)
     private String nombre;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 500)
     private String descripcion;
 
     @Column(nullable = false)
     private Double precio;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
+    private String sku;
+
+    @Column
     private String categoria;
 
-    @Column(nullable = false, length = 50)
+    @Column
     private String marca;
+
 }

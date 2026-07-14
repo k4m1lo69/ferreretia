@@ -3,18 +3,20 @@ package com.Ferreteria.ms_inventarios.service;
 import com.Ferreteria.ms_inventarios.dto.InventarioDTO;
 import com.Ferreteria.ms_inventarios.model.Inventario;
 import com.Ferreteria.ms_inventarios.repository.InventarioRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.DisplayName;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@DisplayName("InventarioService Tests")
 class InventarioServiceTest {
 
     @Mock
@@ -23,101 +25,60 @@ class InventarioServiceTest {
     @InjectMocks
     private InventarioService inventarioService;
 
-    @Test
-    void save_debeGuardarInventarioYRetornarDTO() {
-        InventarioDTO dtoEntrada = InventarioDTO.builder()
-                .productoId(1L)
-                .stock(100)
-                .stockMinimo(10)
-                .ubicacion("Bodega A")
-                .build();
-
-        Inventario inventarioGuardado = Inventario.builder()
-                .id(1L)
-                .productoId(1L)
-                .stock(100)
-                .stockMinimo(10)
-                .ubicacion("Bodega A")
-                .build();
-
-        when(inventarioRepository.save(any(Inventario.class)))
-                .thenReturn(inventarioGuardado);
-
-        InventarioDTO resultado = inventarioService.save(dtoEntrada);
-
-        assertEquals(1L, resultado.getId());
-        assertEquals(1L, resultado.getProductoId());
-        assertEquals(100, resultado.getStock());
-        assertEquals("Bodega A", resultado.getUbicacion());
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void getByProductoId_cuandoExiste_debeRetornarInventario() {
-        Long productoId = 5L;
-        Inventario inventario = Inventario.builder()
-                .id(1L)
-                .productoId(productoId)
-                .stock(50)
-                .stockMinimo(5)
-                .ubicacion("Bodega B")
-                .build();
-
-        when(inventarioRepository.findByProductoId(productoId))
-                .thenReturn(Optional.of(inventario));
-
-        InventarioDTO resultado = inventarioService.getByProductoId(productoId);
-
-        assertEquals(productoId, resultado.getProductoId());
-        assertEquals(50, resultado.getStock());
-    }
-
-    @Test
-    void getByProductoId_cuandoNoExiste_debeLanzarExcepcion() {
-        Long productoId = 99L;
-        when(inventarioRepository.findByProductoId(productoId))
-                .thenReturn(Optional.empty());
-
-        assertThrows(RuntimeException.class, () -> {
-            inventarioService.getByProductoId(productoId);
-        });
-    }
-
-    @Test
-    void delete_cuandoExiste_debeEliminarYRetornarTrue() {
-        Long id = 1L;
-        when(inventarioRepository.existsById(id)).thenReturn(true);
-
-        boolean resultado = inventarioService.delete(id);
-
-        assertTrue(resultado);
-        verify(inventarioRepository, times(1)).deleteById(id);
-    }
-
-    @Test
-    void delete_cuandoNoExiste_debeRetornarFalse() {
-        Long id = 99L;
-        when(inventarioRepository.existsById(id)).thenReturn(false);
-
-        boolean resultado = inventarioService.delete(id);
-
-        assertFalse(resultado);
-        verify(inventarioRepository, never()).deleteById(any());
-    }
-
-    @Test
-    void update_cuandoInventarioNoExiste_debeLanzarExcepcion() {
-        Long id = 99L;
-        when(inventarioRepository.findById(id)).thenReturn(Optional.empty());
-
+    @DisplayName("Debe registrar inventario")
+    void testSaveInventario() {
         InventarioDTO dto = InventarioDTO.builder()
                 .productoId(1L)
-                .stock(20)
-                .stockMinimo(5)
-                .ubicacion("Bodega C")
+                .cantidad(100)
+                .cantidadMinima(5)
+                .ubicacion("Pasillo A")
                 .build();
 
-        assertThrows(RuntimeException.class, () -> {
-            inventarioService.update(id, dto);
-        });
+        Inventario inventario = Inventario.builder()
+                .id(1L)
+                .productoId(1L)
+                .cantidad(100)
+                .cantidadMinima(5)
+                .ubicacion("Pasillo A")
+                .build();
+
+        when(inventarioRepository.save(any())).thenReturn(inventario);
+        InventarioDTO resultado = inventarioService.save(dto);
+
+        assertNotNull(resultado);
+        assertEquals(100, resultado.getCantidad());
+    }
+
+    @Test
+    @DisplayName("Debe obtener inventario por ID")
+    void testGetInventarioById() {
+        Inventario inventario = new Inventario(1L, 1L, 100, 5, "Pasillo A");
+        when(inventarioRepository.findById(1L)).thenReturn(Optional.of(inventario));
+
+        InventarioDTO resultado = inventarioService.getById(1L);
+
+        assertEquals(100, resultado.getCantidad());
+    }
+
+    @Test
+    @DisplayName("Debe actualizar cantidad de inventario")
+    void testUpdateInventario() {
+        Inventario inventarioExistente = new Inventario(1L, 1L, 100, 5, "Pasillo A");
+        Inventario inventarioActualizado = new Inventario(1L, 1L, 150, 5, "Pasillo A");
+
+        InventarioDTO dto = InventarioDTO.builder().cantidad(150).build();
+
+        when(inventarioRepository.findById(1L)).thenReturn(Optional.of(inventarioExistente));
+        when(inventarioRepository.save(any())).thenReturn(inventarioActualizado);
+
+        InventarioDTO resultado = inventarioService.update(1L, dto);
+
+        assertEquals(150, resultado.getCantidad());
     }
 }

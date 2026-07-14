@@ -89,6 +89,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- WEBCLIENT para comunicación entre microservicios -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+
 		<!-- TEST -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -13,7 +13,8 @@ import jakarta.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductoDTO {
+public class
+ProductoDTO {
 
     private Long id;
 
@@ -28,6 +29,8 @@ public class ProductoDTO {
     @NotNull(message = "El precio no puede ser nulo")
     @Min(value = 0, message = "El precio no puede ser negativo")
     private Double precio;
+
+    private String sku;
 
     @NotBlank(message = "La categoría no puede estar vacía")
     private String categoria;

@@ -1,6 +1,9 @@
 package com.Ferreteria.ms_inventarios.controller;
 import com.Ferreteria.ms_inventarios.dto.InventarioDTO;
 import com.Ferreteria.ms_inventarios.service.InventarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -63,9 +66,15 @@ public class InventarioController {
                 .body("Inventario no encontrado");
     }
 
+
     @GetMapping("/producto/{productoId}")
+    @Operation(summary = "Obtener inventario por ID de producto")
+    @ApiResponse(responseCode = "200", description = "Inventario encontrado")
+    @ApiResponse(responseCode = "404", description = "Inventario no encontrado")
     public ResponseEntity<InventarioDTO> getByProductoId(
-            @PathVariable Long productoId) {
+            @PathVariable
+            @Parameter(description = "ID del producto")
+            Long productoId) {
 
         return ResponseEntity.ok(
                 inventarioService.getByProductoId(productoId));

@@ -1,11 +1,11 @@
 package com.Ferreteria.ms_clientes.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Entity
 @Table(name = "clientes")
@@ -21,7 +21,7 @@ public class Cliente {
     @Column(nullable = false, length = 200)
     private String nombre;
 
-    @Column(nullable = false, length = 150)
+    @Column(nullable = false, unique = true, length = 150)
     private String email;
 
     @Column(nullable = false, length = 20)
@@ -29,6 +29,5 @@ public class Cliente {
 
     @Column(nullable = false, length = 200)
     private String direccion;
-
 
 }

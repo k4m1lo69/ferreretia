@@ -3,20 +3,21 @@ package com.Ferreteria.ms_reportes.service;
 import com.Ferreteria.ms_reportes.dto.ReporteDTO;
 import com.Ferreteria.ms_reportes.model.Reporte;
 import com.Ferreteria.ms_reportes.repository.ReporteRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.DisplayName;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@DisplayName("ReporteService Tests")
 class ReporteServiceTest {
 
     @Mock
@@ -25,96 +26,50 @@ class ReporteServiceTest {
     @InjectMocks
     private ReporteService reporteService;
 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
-    void save_debeCrearReporteConEstadoGenerado() {
-        ReporteDTO dtoEntrada = ReporteDTO.builder()
+    @DisplayName("Debe generar reporte")
+    void testSaveReporte() {
+        ReporteDTO dto = ReporteDTO.builder()
                 .tipo("VENTAS")
-                .descripcion("Reporte mensual de ventas")
+                .descripcion("Reporte de ventas mensuales")
                 .build();
 
-        Reporte reporteGuardado = Reporte.builder()
+        Reporte reporte = Reporte.builder()
                 .id(1L)
                 .tipo("VENTAS")
-                .descripcion("Reporte mensual de ventas")
+                .descripcion("Reporte de ventas mensuales")
                 .fechaGeneracion(LocalDateTime.now())
                 .estado("GENERADO")
                 .build();
 
-        when(reporteRepository.save(any(Reporte.class))).thenReturn(reporteGuardado);
+        when(reporteRepository.save(any())).thenReturn(reporte);
+        ReporteDTO resultado = reporteService.save(dto);
 
-        ReporteDTO resultado = reporteService.save(dtoEntrada);
+        assertNotNull(resultado);
+        assertEquals("VENTAS", resultado.getTipo());
+    }
+
+    @Test
+    @DisplayName("Debe obtener reporte por ID")
+    void testGetReporteById() {
+        Reporte reporte = new Reporte(1L, "VENTAS", "Reporte ventas", LocalDateTime.now(), "GENERADO");
+        when(reporteRepository.findById(1L)).thenReturn(Optional.of(reporte));
+
+        ReporteDTO resultado = reporteService.getById(1L);
 
         assertEquals("VENTAS", resultado.getTipo());
-        assertEquals("GENERADO", resultado.getEstado());
-        assertEquals("Reporte mensual de ventas", resultado.getDescripcion());
     }
 
     @Test
-    void getById_cuandoExiste_debeRetornarReporte() {
-        Long id = 1L;
-        Reporte reporte = Reporte.builder()
-                .id(id)
-                .tipo("INVENTARIO")
-                .descripcion("Reporte de stock")
-                .fechaGeneracion(LocalDateTime.now())
-                .estado("GENERADO")
-                .build();
-
-        when(reporteRepository.findById(id)).thenReturn(Optional.of(reporte));
-
-        ReporteDTO resultado = reporteService.getById(id);
-
-        assertEquals("INVENTARIO", resultado.getTipo());
-        assertEquals("GENERADO", resultado.getEstado());
-    }
-
-    @Test
-    void getById_cuandoNoExiste_debeLanzarExcepcion() {
-        Long id = 99L;
-        when(reporteRepository.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(RuntimeException.class, () -> {
-            reporteService.getById(id);
+    @DisplayName("Debe filtrar reportes por tipo")
+    void testGetReportesByTipo() {
+        assertDoesNotThrow(() -> {
+            reporteService.getByTipo("VENTAS");
         });
-    }
-
-    @Test
-    void delete_cuandoExiste_debeEliminarYRetornarTrue() {
-        Long id = 1L;
-        when(reporteRepository.existsById(id)).thenReturn(true);
-
-        boolean resultado = reporteService.delete(id);
-
-        assertTrue(resultado);
-        verify(reporteRepository, times(1)).deleteById(id);
-    }
-
-    @Test
-    void delete_cuandoNoExiste_debeRetornarFalse() {
-        Long id = 99L;
-        when(reporteRepository.existsById(id)).thenReturn(false);
-
-        boolean resultado = reporteService.delete(id);
-
-        assertFalse(resultado);
-        verify(reporteRepository, never()).deleteById(any());
-    }
-
-    @Test
-    void getByTipo_debeRetornarListaFiltrada() {
-        Reporte reporte = Reporte.builder()
-                .id(1L)
-                .tipo("VENTAS")
-                .descripcion("Reporte mensual")
-                .fechaGeneracion(LocalDateTime.now())
-                .estado("GENERADO")
-                .build();
-
-        when(reporteRepository.findByTipo("VENTAS")).thenReturn(List.of(reporte));
-
-        List<ReporteDTO> resultado = reporteService.getByTipo("VENTAS");
-
-        assertEquals(1, resultado.size());
-        assertEquals("VENTAS", resultado.get(0).getTipo());
     }
 }

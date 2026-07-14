@@ -19,13 +19,13 @@ public class InventarioDTO {
     @NotNull(message = "Producto ID obligatorio")
     private Long productoId;
 
-    @NotNull(message = "Stock obligatorio")
-    @Min(value = 0, message = "Stock inválido")
-    private Integer stock;
+    @NotNull(message = "Cantidad obligatorio")
+    @Min(value = 0, message = "Cantidad inválido")
+    private Integer cantidad;
 
-    @NotNull(message = "Stock mínimo obligatorio")
-    @Min(value = 0, message = "Stock mínimo inválido")
-    private Integer stockMinimo;
+    @NotNull(message = "Cantidad Minima mínimo obligatorio")
+    @Min(value = 0, message = "Cantiada Minima mínimo inválido")
+    private Integer cantidadMinima;
 
     @NotBlank(message = "Ubicación obligatoria")
     private String ubicacion;
